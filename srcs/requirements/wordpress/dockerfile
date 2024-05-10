@@ -1,0 +1,21 @@
+FROM debian:bullseye
+
+RUN apt-get update && apt-get install -y \
+    php \
+    php-mysql \
+    wget \
+    unzip \
+    php-fpm \
+    mariadb-client \
+    curl
+
+
+RUN mkdir -p /var/www/html
+COPY tools/wordpress.sh /
+RUN chmod +x /wordpress.sh
+
+EXPOSE 9000
+
+
+CMD ["./wordpress.sh"]
+
