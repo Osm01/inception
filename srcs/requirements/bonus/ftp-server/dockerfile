@@ -1,0 +1,11 @@
+FROM debian:bullseye
+
+RUN apt-get update && apt-get install -y \
+    vsftpd
+
+COPY tools/ftp.sh /ftp.sh
+RUN chmod +x /ftp.sh
+
+EXPOSE 21 20 1024-1048
+
+ENTRYPOINT [ "bash" , "./ftp.sh" ]

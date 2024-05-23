@@ -1,0 +1,13 @@
+FROM debian:bullseye
+
+RUN apt update && apt install wget -y \
+&& apt-get install php php-mysql -y
+
+
+RUN mkdir -p /var/www/html
+
+RUN wget "http://www.adminer.org/latest.php" -O /adminer.php
+
+COPY tools/adminer.sh /adminer.sh
+
+ENTRYPOINT [ "bash" , "adminer.sh"]

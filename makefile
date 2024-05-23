@@ -16,6 +16,6 @@ clean :
 	if [ "$$(docker ps -aq)" ]; then docker rm $$(docker ps -aq); fi
 	if [ "$$(docker images -q)" ]; then docker rmi -f $$(docker images -q); fi
 	if [ "$$(docker volume ls -q)" ]; then docker volume rm $$(docker volume ls -q) ; fi
-	sudo rm -rf /home/ouidriss/data/*
+	sudo rm -rf /home/ouidriss/data/mariadb/* && sudo rm -rf /home/ouidriss/data/wordpress/*
 	
 .PHONY: up down restart ps logs clean

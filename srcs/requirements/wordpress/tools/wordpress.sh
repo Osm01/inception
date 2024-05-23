@@ -12,6 +12,10 @@ if [ ! -d "/var/www/html/wordpress" ]; then
     sed -i "s/username_here/$MYSQL_USER/" /var/www/html/wordpress/wp-config.php
     sed -i "s/password_here/$MYSQL_PASSWORD/" /var/www/html/wordpress/wp-config.php
     sed -i "s/localhost/$MYSQL_HOST/" /var/www/html/wordpress/wp-config.php
+
+    sed -i "/That's all, stop editing! Happy publishing./i define('WP_REDIS_HOST', 'redis');\
+    \ndefine('WP_CACHE', true);" $PATH_TO_WP/wp-config.php
+    echo "extension=redis.so" > /etc/php/7.4/cli/conf.d/20-redis.ini
    
 fi
 
@@ -37,9 +41,15 @@ if [ -z "$(wp user get $WP_ADMIN --field=user_login --allow-root --path=$PATH_TO
     --path=$PATH_TO_WP
     wp user create $WP_USER $WP_USER_EMAIL --role=$WP_USER --user_pass=$WP_USER_PASSWORD \
     --path=$PATH_TO_WP --allow-root
+    wp plugin install redis-cache --activate --allow-root --path=$PATH_TO_WP
+    wp redis enable --allow-root --path=$PATH_TO_WP
 fi
 
 #changing from unix socket to tcp socket to connect to nginx
 sed -i "s;/run/php/php7.4-fpm.sock;0.0.0.0:9000;" /etc/php/7.4/fpm/pool.d/www.conf
 
-php-fpm7.4 -F
+if [ ! -f "/var/www/html/wordpress/resume.html" ]; then
+    mv /resume.html /var/www/html/wordpress
+fi
+
+php-fpm7.4  -F

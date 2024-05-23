@@ -11,4 +11,4 @@ RUN chmod +x /nginx.sh
 
 EXPOSE 443
 
-CMD ["./nginx.sh" ]
+ENTRYPOINT [ "bash" , "./nginx.sh" ]

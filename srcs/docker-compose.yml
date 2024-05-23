@@ -11,8 +11,9 @@ services:
       - mariadb_volume:/var/lib/mysql
     networks:
       - l3ala9ate
+    restart: always
 
-  worpress:
+  wordpress:
     build: ./requirements/wordpress
     image: wordpress
     container_name: wordpress
@@ -24,6 +25,7 @@ services:
       - wordpress_volume:/var/www/html
     networks:
       - l3ala9ate
+    restart: always
       
   nginx:
     build: ./requirements/nginx
@@ -34,24 +36,69 @@ services:
     ports:
       - "443:443"
     depends_on:
-      - worpress
+      - wordpress
     volumes:
       - wordpress_volume:/var/www/html
     networks:
-      - l3ala9ate 
+      - l3ala9ate
+    restart: always
+    
+  redis:
+    build: ./requirements/bonus/redis
+    container_name: redis
+    image: redis
+    env_file:
+      - .env
+    networks:
+      - l3ala9ate
+    depends_on:
+      - wordpress
+    restart: always
+
+  ftp-server:
+    build: ./requirements/bonus/ftp-server
+    container_name: ftp-server
+    image: ftp-server
+    env_file:
+      - .env
+    depends_on:
+      - wordpress
+    volumes:
+      - wordpress_volume:/home/ftpuser/
+    ports:
+      - "21:21"
+      - "20:20"
+      - "1024-1048:1024-1048"
+    networks:
+      - l3ala9ate
+    restart: always
+    
+  adminer:
+    build: ./requirements/bonus/adminer
+    container_name: adminer
+    image: adminer
+    env_file:
+      - .env
+    networks:
+      - l3ala9ate
+    depends_on:
+      - nginx
+    volumes:
+      - wordpress_volume:/var/www/html/
+    restart: always
     
 volumes:
   mariadb_volume:
     driver: local
     driver_opts:
       type: none
-      device: /home/ouidriss/data
+      device: /home/ouidriss/data/mariadb
       o: bind
   wordpress_volume:
       driver: local
       driver_opts:
         type: none
-        device: /home/ouidriss/data
+        device: /home/ouidriss/data/wordpress
         o: bind
 networks:
   l3ala9ate:

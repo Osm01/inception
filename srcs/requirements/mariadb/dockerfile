@@ -5,4 +5,4 @@ COPY ./tools/mariadb.sh /
 RUN chmod +x /mariadb.sh
 EXPOSE 3306
 
-CMD [ "./mariadb.sh" ]
+ENTRYPOINT [ "bash" , "./mariadb.sh" ]

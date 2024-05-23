@@ -1,0 +1,10 @@
+FROM debian:bullseye
+
+RUN apt-get update && apt-get install -y redis-server \
+    && apt-get install procps -y
+
+COPY ./tools/redis.sh /
+RUN chmod +x /redis.sh
+
+
+ENTRYPOINT [ "bash" , "./redis.sh" ]

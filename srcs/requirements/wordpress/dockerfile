@@ -9,13 +9,19 @@ RUN apt-get update && apt-get install -y \
     mariadb-client \
     curl
 
+RUN apt-get install php-redis -y
+RUN apt-get install -y php-pear php-dev
+RUN pecl install -n redis
 
 RUN mkdir -p /var/www/html
 COPY tools/wordpress.sh /
 RUN chmod +x /wordpress.sh
 
+RUN apt-get install -y php-redis php-pear
+COPY tools/resume.html /
+
 EXPOSE 9000
 
 
-CMD ["./wordpress.sh"]
+ENTRYPOINT ["bash" , "./wordpress.sh"]
 
