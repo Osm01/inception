@@ -1,6 +1,9 @@
 #!/bin/bash
 
-if [ ! -f "/var/www/html/adminer.php" ] ; then
+sleep 15
+mkdir -p /var/www/html/wordpress
+
+if [ ! -f "/var/www/html/wordpress/adminer.php" ] ; then
     mv /adminer.php /var/www/html/wordpress/
 fi
 

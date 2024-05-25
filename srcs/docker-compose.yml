@@ -86,6 +86,20 @@ services:
     volumes:
       - wordpress_volume:/var/www/html/
     restart: always
+
+  portainer :
+    build: ./requirements/bonus/portainer
+    container_name: portainer
+    image: portainer
+    env_file:
+      - .env
+    networks:
+      - l3ala9ate
+    ports:
+      - "9000:9000"
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     
 volumes:
   mariadb_volume:

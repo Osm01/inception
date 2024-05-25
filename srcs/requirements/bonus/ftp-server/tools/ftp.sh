@@ -1,5 +1,6 @@
 #!/bin/bash
 
+sleep 15
 # FTP
 
 echo -e "listen=YES\n\
@@ -28,7 +29,7 @@ adduser --disabled-password --gecos "" ftpuser
 echo "ftpuser:123" | chpasswd 
 
 chown ftpuser:ftpuser /srv/ftp
+chown ftpuser:ftpuser /home/ftpuser
 
-mkdir -p /var/run/vsftpd/empty
 
 vsftpd /etc/vsftpd.conf
